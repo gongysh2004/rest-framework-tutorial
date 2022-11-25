@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from rest_framework import permissions, renderers, viewsets
+from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -51,3 +52,8 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+class LoggedInUserView(APIView):
+    def get(self, request):
+        serializer = UserSerializer(self.request.user, context={'request': request})
+        return Response(serializer.data)
